@@ -24,7 +24,7 @@ The system localizes defects at the pixel level and delivers a Pass / Rework / Q
 
 ## What it does
 
-A part image enters the pipeline. VisionGuard AI runs anomaly detection, generates a heatmap showing exactly where the defect is, passes the result through four specialized AI agents, and presents the operator with a full inspection report and decision — all automatically.
+A part image enters the pipeline. VisionGuard AI runs anomaly detection, generates a heatmap showing exactly where the defect is, passes the result through four specialized AI agents, and presents the operator with a full inspection report and decision all automatically.
 
 ```
 Image Input
@@ -46,20 +46,20 @@ React Dashboard              →  live heatmap, streaming report, analytics
 
 ## Key features
 
-| Feature | Status |
-|---|---|
-| PatchCore anomaly detection (pure PyTorch) | ✅ Complete |
-| Pixel-level heatmap generation | ✅ Complete |
-| 99–100% AUROC on MVTec AD benchmark | ✅ Complete |
-| Domain-agnostic — swap training images to change industry | ✅ Complete |
-| LangGraph multi-agent orchestration | 🔄 In Progress |
-| LLM-powered inspection report generation | 🔄 In Progress |
-| Root cause analysis with ChromaDB RAG | 🔄 In Progress |
-| Pass / Rework / Quarantine decision routing | 🔄 In Progress |
-| FastAPI backend with WebSocket streaming | 📅 Planned |
-| React real-time dashboard | 📅 Planned |
-| Docker deployment with public URL | 📅 Planned |
-| Physical demo — conveyor belt + camera | 📅 Future |
+| Feature                                                   | Status         |
+| --------------------------------------------------------- | -------------- |
+| PatchCore anomaly detection (pure PyTorch)                | ✅ Complete    |
+| Pixel-level heatmap generation                            | ✅ Complete    |
+| 99–100% AUROC on MVTec AD benchmark                       | ✅ Complete    |
+| Domain-agnostic — swap training images to change industry | ✅ Complete    |
+| LangGraph multi-agent orchestration                       | 🔄 In Progress |
+| LLM-powered inspection report generation                  | 🔄 In Progress |
+| Root cause analysis with ChromaDB RAG                     | 🔄 In Progress |
+| Pass / Rework / Quarantine decision routing               | 🔄 In Progress |
+| FastAPI backend with WebSocket streaming                  | 📅 Planned     |
+| React real-time dashboard                                 | 📅 Planned     |
+| Docker deployment with public URL                         | 📅 Planned     |
+| Physical demo — conveyor belt + camera                    | 📅 Future      |
 
 ---
 
@@ -75,29 +75,29 @@ The same system pitches to an electronics manufacturer on Monday and an automoti
 
 ## Benchmark results
 
-Trained on the MVTec Anomaly Detection dataset — the global benchmark for industrial anomaly detection. Every serious paper in this field reports results on MVTec AD.
+Trained on the MVTec Anomaly Detection dataset the global benchmark for industrial anomaly detection. Every serious paper in this field reports results on MVTec AD.
 
-| Category | Industry | AUROC | Status |
-|---|---|---|---|
-| metal_nut | Automotive / Industrial | 100.00% | Production Ready |
-| transistor | Electronics Manufacturing | 99.04% | Production Ready |
-| leather | Automotive Interior / Luxury | 100.00% | Production Ready |
+| Category   | Industry                     | AUROC   | Status           |
+| ---------- | ---------------------------- | ------- | ---------------- |
+| metal_nut  | Automotive / Industrial      | 100.00% | Production Ready |
+| transistor | Electronics Manufacturing    | 99.04%  | Production Ready |
+| leather    | Automotive Interior / Luxury | 100.00% | Production Ready |
 
 ---
 
 ## Technology stack
 
-| Layer | Technology |
-|---|---|
-| Computer Vision | PyTorch + WideResNet50 (pretrained, frozen) |
-| Anomaly Detection | PatchCore — memory bank + greedy coreset subsampling |
-| Agent Orchestration | LangGraph |
-| LLM | GPT-4o / Claude Sonnet |
-| Vector Memory | ChromaDB |
-| Backend | FastAPI + Uvicorn |
-| Frontend | React + Recharts + Canvas API |
-| Deployment | Docker Compose + Railway |
-| Dataset | MVTec AD (CC BY-NC-SA 4.0) |
+| Layer               | Technology                                           |
+| ------------------- | ---------------------------------------------------- |
+| Computer Vision     | PyTorch + WideResNet50 (pretrained, frozen)          |
+| Anomaly Detection   | PatchCore — memory bank + greedy coreset subsampling |
+| Agent Orchestration | LangGraph                                            |
+| LLM                 | GPT-4o / Claude Sonnet                               |
+| Vector Memory       | ChromaDB                                             |
+| Backend             | FastAPI + Uvicorn                                    |
+| Frontend            | React + Recharts + Canvas API                        |
+| Deployment          | Docker Compose + Railway                             |
+| Dataset             | MVTec AD (CC BY-NC-SA 4.0)                           |
 
 ---
 
@@ -177,7 +177,7 @@ To train your own models, open `notebooks/visionguard_patchcore_training.ipynb` 
 
 ## How the CV model works
 
-PatchCore takes a different approach from traditional defect classifiers. Instead of learning what defects look like, it learns what normal looks like — then flags anything that deviates.
+PatchCore takes a different approach from traditional defect classifiers. Instead of learning what defects look like, it learns what normal looks like then flags anything that deviates.
 
 A pretrained WideResNet50 extracts patch-level features from normal training images. These features are stored in a memory bank after greedy coreset subsampling reduces the bank to 10% of its original size while preserving maximum coverage. At inference time, each patch of the new image is compared to the memory bank using k-nearest neighbor distance. High distance means anomaly. The spatial distribution of distances becomes the heatmap.
 
@@ -213,10 +213,12 @@ Four agents collaborate through a LangGraph orchestration graph. Each agent has 
 
 ## About
 
-Built by **Salim Hossain** — full-stack engineer and AI researcher at EPITA Paris, with background in CNC machining to 0.01mm tolerance.
+Built by **Salim Hossain** — AI Engineer (MSc AI & Intelligent Systems, EPITA Paris),
+Full-Stack Software Engineer (3+ years, React / Node.js / Java/Python), and CNC Programmer
+with hands-on machining experience to 0.01mm tolerance.
 
 That last part matters. Most engineers who build industrial AI systems have never stood on a factory floor. The agent reasoning in VisionGuard AI reflects real manufacturing knowledge — how defects actually happen, what operators actually need to see, and what decisions actually make sense in a production environment.
 
 ---
 
-*VisionGuard AI is under active development. Star the repository to follow progress.*
+_VisionGuard AI is under active development. Star the repository to follow progress._
