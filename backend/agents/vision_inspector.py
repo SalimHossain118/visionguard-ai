@@ -64,7 +64,7 @@ def vision_inspector(state: InspectionState) -> InspectionState:
     defect_mask     = heatmap > threshold
     coverage        = float(np.sum(defect_mask) / heatmap.size * 100)
 
-    # Find defect location — divide image into 3x3 grid
+    # Find defect location  divide image into 3x3 grid
     # and find which region has the highest anomaly intensity
     h, w    = heatmap.shape
     regions = {
