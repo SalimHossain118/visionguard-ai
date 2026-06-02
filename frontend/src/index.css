@@ -26,3 +26,9 @@ body {
   background: #3b82f6;
   border-radius: 3px;
 }
+@media print {
+  header,
+  nav {
+    display: none !important;
+  }
+}
