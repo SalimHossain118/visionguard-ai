@@ -1,10 +1,9 @@
-
-
 from fastapi import FastAPI
 from dotenv import load_dotenv
 import os
+import sys
 
-from backend.api.routes import router as api_router
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 load_dotenv()
 
@@ -18,10 +17,11 @@ app = FastAPI(
         "email": "support@visionguard.ai",
     },
     license_info={
-       "name": "MIT",
+        "name": "MIT",
     },
 )
 
+from api.routes import router as api_router
 app.include_router(api_router, prefix="/api/v1")
 
 
@@ -32,4 +32,3 @@ def health_check():
         "system": "VisionGuard AI",
         "version": "1.0.0"
     }
-
