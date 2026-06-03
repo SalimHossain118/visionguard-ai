@@ -23,6 +23,7 @@ export default function App() {
   const [showSamples, setShowSamples] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
+  const [preloadedCategory, setPreloadedCategory] = useState(null);
 
   // Load history from ChromaDB on startup
   useEffect(() => {
@@ -36,9 +37,11 @@ export default function App() {
   }, [dispatch]);
 
   // Called when user selects a sample image from the modal
-  const handleSampleSelect = (file, url) => {
+  // Now receives category as third argument
+  const handleSampleSelect = (file, url, category) => {
     setSelectedFile(file);
     setPreviewUrl(url);
+    setPreloadedCategory(category);
     setActiveTab("inspect");
   };
 
@@ -59,7 +62,6 @@ export default function App() {
             </div>
           </div>
           <div className="flex items-center gap-4">
-            {/* Sample Images Button */}
             <button
               onClick={() => setShowSamples(true)}
               className="px-3 py-1.5 bg-blue-500/20 border border-blue-500/30 text-blue-400 rounded-lg text-xs font-medium hover:bg-blue-500/30 transition-colors"
@@ -99,9 +101,11 @@ export default function App() {
           <InspectionFeed
             preloadedFile={selectedFile}
             preloadedUrl={previewUrl}
+            preloadedCategory={preloadedCategory}
             onPreloadConsumed={() => {
               setSelectedFile(null);
               setPreviewUrl(null);
+              setPreloadedCategory(null);
             }}
           />
         )}

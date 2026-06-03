@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { useDispatch } from "react-redux";
-import { setCategory } from "../../store/inspectionSlice";
 
 const BASE_URL = process.env.REACT_APP_API_URL || "";
 
@@ -29,13 +27,11 @@ const CATEGORIES = [
 ];
 
 export default function SampleModal({ onClose, onSelectImage }) {
-  const dispatch = useDispatch();
   const [activeTab, setActiveTab] = useState("metal_nut");
   const [images, setImages] = useState({});
   const [loading, setLoading] = useState({});
 
   useEffect(() => {
-    // Load image list for all categories on mount
     CATEGORIES.forEach((cat) => {
       setLoading((prev) => ({ ...prev, [cat.id]: true }));
       fetch(`${BASE_URL}/api/v1/samples/${cat.id}`)
@@ -52,15 +48,13 @@ export default function SampleModal({ onClose, onSelectImage }) {
   }, []);
 
   const handleSelectImage = async (category, filename) => {
-    // Fetch the image as blob and create a File object
     const url = `${BASE_URL}/api/v1/samples/${category}/${filename}`;
     const response = await fetch(url);
     const blob = await response.blob();
     const file = new File([blob], filename, { type: "image/png" });
 
-    // Switch to correct category and pass file to parent
-    dispatch(setCategory(category));
-    onSelectImage(file, url);
+    // Pass category as third argument — App.js forwards it to InspectionFeed
+    onSelectImage(file, url, category);
     onClose();
   };
 

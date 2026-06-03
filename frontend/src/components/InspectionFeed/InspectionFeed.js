@@ -12,32 +12,36 @@ import HeatmapOverlay from "./HeatmapOverlay";
 export default function InspectionFeed({
   preloadedFile,
   preloadedUrl,
+  preloadedCategory,
   onPreloadConsumed,
 }) {
   const dispatch = useDispatch();
-  const { currentInspection, isLoading, error, category } = useSelector(
+  const { currentInspection, isLoading, error } = useSelector(
     (s) => s.inspection,
   );
 
   const [selectedFile, setSelectedFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
-  const [selectedCategory, setSelectedCategory] = useState(
-    category || "metal_nut",
-  );
+  const [selectedCategory, setSelectedCategory] = useState("metal_nut");
 
-  // Sync local category with Redux — fires when modal selects a category
-  useEffect(() => {
-    if (category) setSelectedCategory(category);
-  }, [category]);
-
-  // When a sample image is selected from the modal — load it automatically
+  // When modal selects an image — load file, preview AND switch category
   useEffect(() => {
     if (preloadedFile && preloadedUrl) {
       setSelectedFile(preloadedFile);
       setPreviewUrl(preloadedUrl);
+      if (preloadedCategory) {
+        setSelectedCategory(preloadedCategory);
+        dispatch(setCategory(preloadedCategory));
+      }
       if (onPreloadConsumed) onPreloadConsumed();
     }
-  }, [preloadedFile, preloadedUrl, onPreloadConsumed]);
+  }, [
+    preloadedFile,
+    preloadedUrl,
+    preloadedCategory,
+    onPreloadConsumed,
+    dispatch,
+  ]);
 
   const categories = [
     { id: "metal_nut", label: "Metal Nut", industry: "Automotive" },
