@@ -25,12 +25,16 @@ app = FastAPI(
 # Allow React frontend to communicate with FastAPI
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
+    allow_origins=[
+        "http://localhost:3000",
+        "http://localhost:80",
+        "https://*.hf.space",
+        "*"
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
 from api.routes import router as api_router
 app.include_router(api_router, prefix="/api/v1")
 
