@@ -1,7 +1,7 @@
 import chromadb
 import os
 from dotenv import load_dotenv
-
+from datetime import datetime
 load_dotenv()
 
 
@@ -41,13 +41,15 @@ class InspectionMemory:
         """
 
         metadata = {
-            "severity":         state.get('severity', ''),
-            "defect_location":  state.get('defect_location', ''),
-            "coverage_percent": float(state.get('coverage_percent', 0)),
-            "anomaly_score":    float(state.get('anomaly_score', 0)),
-            "decision":         state.get('decision', ''),
-            "image_path":       state.get('image_path', ''),
+             "severity":         state.get('severity', ''),
+    "defect_location":  state.get('defect_location', ''),
+    "coverage_percent": float(state.get('coverage_percent', 0)),
+    "anomaly_score":    float(state.get('anomaly_score', 0)),
+    "decision":         state.get('decision', ''),
+    "image_path":       state.get('image_path', ''),
         }
+
+        
 
         self.collection.add(
             documents=[document],

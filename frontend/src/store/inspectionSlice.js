@@ -1,18 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  // Current inspection result
   currentInspection: null,
   isLoading: false,
   error: null,
-
-  // Selected category
   category: "metal_nut",
-
-  // Inspection history
   history: [],
-
-  // System status
   systemStatus: "online",
 };
 
@@ -27,7 +20,6 @@ const inspectionSlice = createSlice({
       state.currentInspection = action.payload;
       state.isLoading = false;
       state.error = null;
-      // Add to history
       state.history.unshift({
         ...action.payload,
         timestamp: new Date().toISOString(),
@@ -45,6 +37,12 @@ const inspectionSlice = createSlice({
       state.currentInspection = null;
       state.error = null;
     },
+    setHistory: (state, action) => {
+      state.history = action.payload;
+    },
+    clearHistory: (state) => {
+      state.history = [];
+    },
   },
 });
 
@@ -54,6 +52,8 @@ export const {
   setError,
   setCategory,
   clearCurrentInspection,
+  setHistory,
+  clearHistory,
 } = inspectionSlice.actions;
 
 export default inspectionSlice.reducer;

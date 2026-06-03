@@ -1,5 +1,4 @@
 from fastapi import APIRouter, File, UploadFile, HTTPException
-from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 import sys
 import os
@@ -11,16 +10,12 @@ from agents.pipeline import run_inspection
 
 router = APIRouter()
 
-# Load models at startup — not on every request
-# This is critical for performance
-# Loading a model takes 2-3 seconds — we do it once
+# Load models at startup — not on every request.
+# Loading a model takes 2-3 seconds — we do it once and cache.
 MODELS = {}
 
+
 def get_model(category: str) -> PatchCoreInference:
-    """
-    Load model lazily — only when first requested.
-    Cache in memory for subsequent requests.
-    """
     if category not in MODELS:
         try:
             MODELS[category] = PatchCoreInference(category)
@@ -53,39 +48,23 @@ async def inspect_image(
 ):
     """
     Main inspection endpoint.
-
     Accepts an image file and product category.
-    Returns full inspection result including:
-    - Anomaly score and heatmap
-    - Severity and defect location
-    - LLM-generated inspection report
-    - Root cause analysis
-    - Pass / Rework / Quarantine decision
+    Runs PatchCore + LangGraph pipeline.
+    Returns full inspection result.
     """
 
-    # Validate file type
     if not file.content_type or not file.content_type.startswith('image/'):
-        raise HTTPException(
-            status_code=400,
-            detail='File must be an image (jpg, png, etc.)'
-        )
+        raise HTTPException(status_code=400, detail='File must be an image.')
 
-    # Validate category
     supported = ['metal_nut', 'transistor', 'leather']
     if category not in supported:
-        raise HTTPException(
-            status_code=400,
-            detail=f'Category must be one of: {supported}'
-        )
+        raise HTTPException(status_code=400, detail=f'Category must be one of: {supported}')
 
-    # Read image bytes
     image_bytes = await file.read()
 
-    # Run PatchCore inference
     model = get_model(category)
     anomaly_score, heatmap = model.predict_from_bytes(image_bytes)
 
-    # Run LangGraph pipeline
     result = run_inspection(
         image_path=file.filename or "uploaded_image",
         anomaly_score=anomaly_score,
@@ -108,27 +87,57 @@ async def inspect_image(
 
 
 @router.get("/history")
-async def get_history():
+async def get_history(limit: int = 50):
     """
-    Returns recent inspection history from ChromaDB.
+    Returns real inspection history from ChromaDB.
+    Frontend loads this on startup to restore history across all devices.
     """
     from memory.chromadb_client import InspectionMemory
     memory = InspectionMemory()
+
+    if memory.count() == 0:
+        return {"total": 0, "inspections": []}
+
+    results = memory.collection.get(
+        limit=limit,
+        include=["documents", "metadatas"]
+    )
+
+    # Safe extraction — Pylance requires explicit None checks
+    metadatas = results.get('metadatas') or []
+    documents = results.get('documents') or []
+    ids       = results.get('ids') or []
+
+    inspections = []
+    for i, metadata in enumerate(metadatas):
+        inspections.append({
+            "id":               ids[i] if i < len(ids) else str(i),
+            "anomaly_score":    metadata.get('anomaly_score', 0),
+            "severity":         metadata.get('severity', ''),
+            "defect_location":  metadata.get('defect_location', ''),
+            "coverage_percent": metadata.get('coverage_percent', 0),
+            "decision":         metadata.get('decision', ''),
+            "category":         metadata.get('image_path', ''),
+            "timestamp":        metadata.get('timestamp', ''),
+            "inspection_report": documents[i] if i < len(documents) else '',
+        })
+
+    # Most recent first
+    inspections.sort(key=lambda x: x['timestamp'], reverse=True)
+
     return {
-        "total_inspections": memory.count(),
-        "message": "Inspection history endpoint — full implementation in Phase 5"
+        "total":       memory.count(),
+        "inspections": inspections
     }
 
 
 @router.get("/categories")
 async def get_categories():
-    """
-    Returns supported product categories.
-    """
+    """Returns supported product categories."""
     return {
         "categories": [
-            {"id": "metal_nut",   "name": "Metal Nut",   "industry": "Automotive / Industrial"},
-            {"id": "transistor",  "name": "Transistor",  "industry": "Electronics"},
-            {"id": "leather",     "name": "Leather",     "industry": "Automotive Interior / Luxury"},
+            {"id": "metal_nut",  "name": "Metal Nut",  "industry": "Automotive / Industrial"},
+            {"id": "transistor", "name": "Transistor", "industry": "Electronics"},
+            {"id": "leather",    "name": "Leather",    "industry": "Automotive Interior / Luxury"},
         ]
     }

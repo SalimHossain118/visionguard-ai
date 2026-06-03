@@ -1,3 +1,8 @@
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { setHistory } from "./store/inspectionSlice";
+import { getHistory } from "./services/api";
+
 import React, { useState } from "react";
 import InspectionFeed from "./components/InspectionFeed/InspectionFeed";
 import ReportPanel from "./components/ReportPanel/ReportPanel";
@@ -15,6 +20,19 @@ const tabs = [
 
 export default function App() {
   const [activeTab, setActiveTab] = useState("inspect");
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    // Load history from ChromaDB on startup
+    getHistory()
+      .then((data) => {
+        if (data.inspections && data.inspections.length > 0) {
+          dispatch(setHistory(data.inspections));
+        }
+      })
+      .catch((err) => console.warn("Could not load history:", err));
+  }, [dispatch]);
 
   return (
     <div className="min-h-screen bg-slate-900 text-slate-100">
