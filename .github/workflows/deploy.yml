@@ -28,6 +28,23 @@ jobs:
           rm -f docker-compose.yml
           rm -rf docker/
 
+      - name: Create HF Spaces README
+        run: |
+          cat > README.md << 'EOF'
+          ---
+          title: VisionGuard AI
+          emoji: 🏭
+          colorFrom: blue
+          colorTo: red
+          sdk: docker
+          pinned: false
+          app_port: 7860
+          ---
+
+          # VisionGuard AI
+          Industrial AI Quality Control System — Computer Vision + LLM + Multi-Agent AI
+          EOF
+
       - name: Push to Hugging Face Spaces
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
@@ -35,6 +52,6 @@ jobs:
           git config user.email "deploy@github.com"
           git config user.name "GitHub Actions"
           git add -A
-          git diff --staged --quiet || git commit -m "deploy: remove non-essential files"
+          git diff --staged --quiet || git commit -m "deploy: prepare for HF Spaces"
           git remote add space https://Salim118:$HF_TOKEN@huggingface.co/spaces/Salim118/visionguard-ai
           git push --force space main
