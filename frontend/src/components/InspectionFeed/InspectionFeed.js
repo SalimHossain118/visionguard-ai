@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   setLoading,
@@ -8,15 +8,28 @@ import {
 import { inspectImage } from "../../services/api";
 import HeatmapOverlay from "./HeatmapOverlay";
 
-export default function InspectionFeed() {
+export default function InspectionFeed({
+  preloadedFile,
+  preloadedUrl,
+  onPreloadConsumed,
+}) {
   const dispatch = useDispatch();
-  const { currentInspection, isLoading, error, category } = useSelector(
+  const { currentInspection, isLoading, error } = useSelector(
     (s) => s.inspection,
   );
 
   const [selectedFile, setSelectedFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState("metal_nut");
+
+  // When a sample image is selected from the modal — load it automatically
+  useEffect(() => {
+    if (preloadedFile && preloadedUrl) {
+      setSelectedFile(preloadedFile);
+      setPreviewUrl(preloadedUrl);
+      if (onPreloadConsumed) onPreloadConsumed();
+    }
+  }, [preloadedFile, preloadedUrl, onPreloadConsumed]);
 
   const categories = [
     { id: "metal_nut", label: "Metal Nut", industry: "Automotive" },
@@ -110,7 +123,10 @@ export default function InspectionFeed() {
               <p className="text-slate-400 text-sm">
                 Drop image here or click to upload
               </p>
-              <p className="text-slate-600 text-xs mt-1">PNG, JPG supported</p>
+              <p className="text-slate-600 text-xs mt-1">
+                Or use <span className="text-blue-400">Sample Images</span> from
+                the top bar
+              </p>
             </div>
           )}
           <input
@@ -162,6 +178,9 @@ export default function InspectionFeed() {
           <div className="flex flex-col items-center justify-center h-64 text-slate-600">
             <div className="text-5xl mb-3">🔍</div>
             <p className="text-sm">Upload an image to start inspection</p>
+            <p className="text-xs mt-2 text-slate-700">
+              Use Sample Images button for quick demo
+            </p>
           </div>
         )}
 

@@ -1,14 +1,13 @@
-import { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { setHistory } from "./store/inspectionSlice";
 import { getHistory } from "./services/api";
-
-import React, { useState } from "react";
 import InspectionFeed from "./components/InspectionFeed/InspectionFeed";
 import ReportPanel from "./components/ReportPanel/ReportPanel";
 import AnalyticsDashboard from "./components/AnalyticsDashboard/AnalyticsDashboard";
 import HistoryTable from "./components/HistoryTable/HistoryTable";
 import ConfigPanel from "./components/ConfigPanel/ConfigPanel";
+import SampleModal from "./components/SampleModal/SampleModal";
 
 const tabs = [
   { id: "inspect", label: "Live Inspection" },
@@ -19,12 +18,14 @@ const tabs = [
 ];
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState("inspect");
-
   const dispatch = useDispatch();
+  const [activeTab, setActiveTab] = useState("inspect");
+  const [showSamples, setShowSamples] = useState(false);
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState(null);
 
+  // Load history from ChromaDB on startup
   useEffect(() => {
-    // Load history from ChromaDB on startup
     getHistory()
       .then((data) => {
         if (data.inspections && data.inspections.length > 0) {
@@ -33,6 +34,13 @@ export default function App() {
       })
       .catch((err) => console.warn("Could not load history:", err));
   }, [dispatch]);
+
+  // Called when user selects a sample image from the modal
+  const handleSampleSelect = (file, url) => {
+    setSelectedFile(file);
+    setPreviewUrl(url);
+    setActiveTab("inspect");
+  };
 
   return (
     <div className="min-h-screen bg-slate-900 text-slate-100">
@@ -50,9 +58,18 @@ export default function App() {
               </p>
             </div>
           </div>
-          <div className="flex items-center gap-2">
-            <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-            <span className="text-xs text-slate-400">System Online</span>
+          <div className="flex items-center gap-4">
+            {/* Sample Images Button */}
+            <button
+              onClick={() => setShowSamples(true)}
+              className="px-3 py-1.5 bg-blue-500/20 border border-blue-500/30 text-blue-400 rounded-lg text-xs font-medium hover:bg-blue-500/30 transition-colors"
+            >
+              Sample Images
+            </button>
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+              <span className="text-xs text-slate-400">System Online</span>
+            </div>
           </div>
         </div>
       </header>
@@ -78,12 +95,29 @@ export default function App() {
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-6 py-6">
-        {activeTab === "inspect" && <InspectionFeed />}
+        {activeTab === "inspect" && (
+          <InspectionFeed
+            preloadedFile={selectedFile}
+            preloadedUrl={previewUrl}
+            onPreloadConsumed={() => {
+              setSelectedFile(null);
+              setPreviewUrl(null);
+            }}
+          />
+        )}
         {activeTab === "report" && <ReportPanel />}
         {activeTab === "analytics" && <AnalyticsDashboard />}
         {activeTab === "history" && <HistoryTable />}
         {activeTab === "config" && <ConfigPanel />}
       </main>
+
+      {/* Sample Images Modal */}
+      {showSamples && (
+        <SampleModal
+          onClose={() => setShowSamples(false)}
+          onSelectImage={handleSampleSelect}
+        />
+      )}
     </div>
   );
 }

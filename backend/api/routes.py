@@ -141,3 +141,48 @@ async def get_categories():
             {"id": "leather",    "name": "Leather",    "industry": "Automotive Interior / Luxury"},
         ]
     }
+
+# getting samples images 
+@router.get("/samples/{category}")
+async def get_sample_list(category: str):
+    """Returns list of sample images for a category."""
+    supported = ['metal_nut', 'transistor', 'leather']
+    if category not in supported:
+        raise HTTPException(status_code=400, detail=f'Category must be one of: {supported}')
+
+    samples_dir = os.path.join(
+        os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+        'data', 'samples', category
+    )
+
+    if not os.path.exists(samples_dir):
+        return {"images": [], "category": category}
+
+    images = [
+        f for f in os.listdir(samples_dir)
+        if f.lower().endswith(('.png', '.jpg', '.jpeg'))
+    ]
+
+    return {"images": sorted(images), "category": category}
+
+
+@router.get("/samples/{category}/{filename}")
+async def get_sample_image(category: str, filename: str):
+    """Serves a single sample image file."""
+    from fastapi.responses import FileResponse as FR
+
+    supported = ['metal_nut', 'transistor', 'leather']
+    if category not in supported:
+        raise HTTPException(status_code=400, detail='Invalid category')
+
+    image_path = os.path.join(
+        os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+        'data', 'samples', category, filename
+    )
+
+    if not os.path.exists(image_path):
+        raise HTTPException(status_code=404, detail='Image not found')
+
+    return FR(image_path)
+
+#end 
