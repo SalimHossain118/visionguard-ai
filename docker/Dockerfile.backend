@@ -1,0 +1,25 @@
+# Start with official Python 3.11 slim image
+# slim = smaller size, only what we need
+FROM python:3.11-slim
+
+# Set working directory inside container
+WORKDIR /app
+
+# Copy requirements first — Docker caches this layer
+# If requirements don't change, Docker skips reinstalling
+COPY backend/requirements.txt .
+
+# Install Python dependencies
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy the entire backend code
+COPY backend/ ./backend/
+
+# Copy .env.example as reference
+COPY .env.example .
+
+# Expose port 8000
+EXPOSE 8000
+
+# Start FastAPI with uvicorn
+CMD ["uvicorn", "backend.main:app", "--host", "0.0.0.0", "--port", "8000"]
