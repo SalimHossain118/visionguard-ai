@@ -18,7 +18,7 @@ jobs:
       - name: Remove binary files from history
         run: |
           git filter-branch --force --index-filter \
-            'git rm --cached --ignore-unmatch docs/images/metal_nut_demo.png docs/images/transistor_demo.png' \
+            'git rm --cached --ignore-unmatch -r docs/images/ backend/data/samples/' \
             --prune-empty --tag-name-filter cat -- --all
 
       - name: Remove files not needed for HF Spaces
