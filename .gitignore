@@ -222,8 +222,6 @@ __marimo__/
 # Project specific
 backend/models/
 backend/data/
-!backend/data/samples/
-!backend/data/samples/**
 .env
 *.pth
 *.pt

@@ -10,6 +10,14 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 load_dotenv()
 
+# Download sample images from HF Hub on startup if not present
+# Download sample images from HF Hub on startup if not present
+try:
+    from utils.download_assets import download_samples
+    download_samples()
+except Exception as e:
+    print(f"Warning: Could not download samples: {e}")
+
 app = FastAPI(
     title="VisionGuard AI",
     description="Industrial AI Quality Control System using Computer Vision",

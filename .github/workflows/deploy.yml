@@ -27,6 +27,7 @@ jobs:
           rm -rf notebooks/
           rm -f docker-compose.yml
           rm -rf docker/
+          rm -rf backend/data/samples/
 
       - name: Create HF Spaces README
         run: |
