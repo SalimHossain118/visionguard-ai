@@ -26,7 +26,7 @@ def decision_router(state: InspectionState) -> InspectionState:
     coverage = state["coverage_percent"]
 
     # Decision logic — based on severity + coverage
-    if severity == "NORMAL" or score < 0.3:
+    if severity == "NORMAL" or score < 0.75:
         decision = "PASS"
     elif severity == "CRITICAL" or coverage > 20.0:
         decision = "QUARANTINE"

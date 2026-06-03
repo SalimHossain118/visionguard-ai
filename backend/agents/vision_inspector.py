@@ -48,13 +48,13 @@ def vision_inspector(state: InspectionState) -> InspectionState:
 
     # Determine severity based on anomaly score thresholds
     # These thresholds are tunable business rules
-    if score < 0.3:
+    if score < 0.75:
         severity = "NORMAL"
-    elif score < 0.5:
-        severity = "LOW"
-    elif score < 0.7:
-        severity = "MEDIUM"
     elif score < 0.85:
+        severity = "LOW"
+    elif score < 0.92:
+        severity = "MEDIUM"
+    elif score < 0.97:
         severity = "HIGH"
     else:
         severity = "CRITICAL"
@@ -88,5 +88,5 @@ def vision_inspector(state: InspectionState) -> InspectionState:
         "coverage_percent": round(coverage, 2),
         "max_intensity":    round(float(heatmap.max()), 4),
         "mean_intensity":   round(float(heatmap.mean()), 4),
-        "is_defective":     score >= 0.3,
+        "is_defective":     score >= 0.75,
     }
