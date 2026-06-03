@@ -1,10 +1,10 @@
-
-
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
 import os
+import sys
 
-from backend.api.routes import router as api_router
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 load_dotenv()
 
@@ -18,10 +18,24 @@ app = FastAPI(
         "email": "support@visionguard.ai",
     },
     license_info={
-       "name": "MIT",
+        "name": "MIT",
     },
 )
 
+# Allow React frontend to communicate with FastAPI
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:3000",
+        "http://localhost:80",
+        "https://*.hf.space",
+        "*"
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+from api.routes import router as api_router
 app.include_router(api_router, prefix="/api/v1")
 
 
@@ -32,4 +46,3 @@ def health_check():
         "system": "VisionGuard AI",
         "version": "1.0.0"
     }
-
