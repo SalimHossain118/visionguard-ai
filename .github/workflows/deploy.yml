@@ -14,7 +14,12 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          lfs: true
+
+      - name: Remove binary files from history
+        run: |
+          git filter-branch --force --index-filter \
+            'git rm --cached --ignore-unmatch docs/images/metal_nut_demo.png docs/images/transistor_demo.png' \
+            --prune-empty --tag-name-filter cat -- --all
 
       - name: Remove files not needed for HF Spaces
         run: |
