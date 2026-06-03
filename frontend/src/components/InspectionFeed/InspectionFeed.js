@@ -4,6 +4,7 @@ import {
   setLoading,
   setInspectionResult,
   setError,
+  setCategory,
 } from "../../store/inspectionSlice";
 import { inspectImage } from "../../services/api";
 import HeatmapOverlay from "./HeatmapOverlay";
@@ -14,13 +15,20 @@ export default function InspectionFeed({
   onPreloadConsumed,
 }) {
   const dispatch = useDispatch();
-  const { currentInspection, isLoading, error } = useSelector(
+  const { currentInspection, isLoading, error, category } = useSelector(
     (s) => s.inspection,
   );
 
   const [selectedFile, setSelectedFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
-  const [selectedCategory, setSelectedCategory] = useState("metal_nut");
+  const [selectedCategory, setSelectedCategory] = useState(
+    category || "metal_nut",
+  );
+
+  // Sync local category with Redux — fires when modal selects a category
+  useEffect(() => {
+    if (category) setSelectedCategory(category);
+  }, [category]);
 
   // When a sample image is selected from the modal — load it automatically
   useEffect(() => {
@@ -50,6 +58,11 @@ export default function InspectionFeed({
     if (!file) return;
     setSelectedFile(file);
     setPreviewUrl(URL.createObjectURL(file));
+  };
+
+  const handleCategoryClick = (catId) => {
+    setSelectedCategory(catId);
+    dispatch(setCategory(catId));
   };
 
   const handleInspect = async () => {
@@ -90,7 +103,7 @@ export default function InspectionFeed({
             {categories.map((cat) => (
               <button
                 key={cat.id}
-                onClick={() => setSelectedCategory(cat.id)}
+                onClick={() => handleCategoryClick(cat.id)}
                 className={`p-3 rounded-lg border text-left transition-all ${
                   selectedCategory === cat.id
                     ? "border-blue-500 bg-blue-500/10 text-blue-400"
