@@ -11,14 +11,25 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
           lfs: true
+
+      - name: Remove files not needed for HF Spaces
+        run: |
+          rm -rf docs/
+          rm -rf notebooks/
+          rm -f docker-compose.yml
+          rm -rf docker/
 
       - name: Push to Hugging Face Spaces
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
+          git config user.email "deploy@github.com"
+          git config user.name "GitHub Actions"
+          git add -A
+          git diff --staged --quiet || git commit -m "deploy: remove non-essential files"
           git remote add space https://Salim118:$HF_TOKEN@huggingface.co/spaces/Salim118/visionguard-ai
           git push --force space main
