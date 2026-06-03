@@ -8,6 +8,10 @@ An end-to-end, domain-agnostic quality control platform that combines computer v
 
 ---
 
+## 🚀 Live Demo
+
+**[Try VisionGuard AI Live](https://salim118-visionguard-ai.hf.space)**
+
 ## Demo
 
 **Metal Nut — Scratch Detection**
@@ -46,20 +50,20 @@ React Dashboard              →  live heatmap, streaming report, analytics
 
 ## Key features
 
-| Feature | Status |
-|---|---|
-| PatchCore anomaly detection (pure PyTorch) | ✅ Complete |
-| Pixel-level heatmap generation | ✅ Complete |
-| 99–100% AUROC on MVTec AD benchmark | ✅ Complete |
-| Domain-agnostic — swap training images to change industry | ✅ Complete |
-| LangGraph multi-agent orchestration | 🔄 In Progress |
-| LLM-powered inspection report generation | 🔄 In Progress |
-| Root cause analysis with ChromaDB RAG | 🔄 In Progress |
-| Pass / Rework / Quarantine decision routing | 🔄 In Progress |
-| FastAPI backend with WebSocket streaming | 📅 Planned |
-| React real-time dashboard | 📅 Planned |
-| Docker deployment with public URL | 📅 Planned |
-| Physical demo — conveyor belt + camera | 📅 Future |
+| Feature                                                   | Status         |
+| --------------------------------------------------------- | -------------- |
+| PatchCore anomaly detection (pure PyTorch)                | ✅ Complete    |
+| Pixel-level heatmap generation                            | ✅ Complete    |
+| 99–100% AUROC on MVTec AD benchmark                       | ✅ Complete    |
+| Domain-agnostic — swap training images to change industry | ✅ Complete    |
+| LangGraph multi-agent orchestration                       | 🔄 In Progress |
+| LLM-powered inspection report generation                  | 🔄 In Progress |
+| Root cause analysis with ChromaDB RAG                     | 🔄 In Progress |
+| Pass / Rework / Quarantine decision routing               | 🔄 In Progress |
+| FastAPI backend with WebSocket streaming                  | 📅 Planned     |
+| React real-time dashboard                                 | 📅 Planned     |
+| Docker deployment with public URL                         | 📅 Planned     |
+| Physical demo — conveyor belt + camera                    | 📅 Future      |
 
 ---
 
@@ -77,27 +81,27 @@ The same system pitches to an electronics manufacturer on Monday and an automoti
 
 Trained on the MVTec Anomaly Detection dataset — the global benchmark for industrial anomaly detection. Every serious paper in this field reports results on MVTec AD.
 
-| Category | Industry | AUROC | Status |
-|---|---|---|---|
-| metal_nut | Automotive / Industrial | 100.00% | Production Ready |
-| transistor | Electronics Manufacturing | 99.04% | Production Ready |
-| leather | Automotive Interior / Luxury | 100.00% | Production Ready |
+| Category   | Industry                     | AUROC   | Status           |
+| ---------- | ---------------------------- | ------- | ---------------- |
+| metal_nut  | Automotive / Industrial      | 100.00% | Production Ready |
+| transistor | Electronics Manufacturing    | 99.04%  | Production Ready |
+| leather    | Automotive Interior / Luxury | 100.00% | Production Ready |
 
 ---
 
 ## Technology stack
 
-| Layer | Technology |
-|---|---|
-| Computer Vision | PyTorch + WideResNet50 (pretrained, frozen) |
-| Anomaly Detection | PatchCore — memory bank + greedy coreset subsampling |
-| Agent Orchestration | LangGraph |
-| LLM | GPT-4o / Claude Sonnet |
-| Vector Memory | ChromaDB |
-| Backend | FastAPI + Uvicorn |
-| Frontend | React + Recharts + Canvas API |
-| Deployment | Docker Compose + Railway |
-| Dataset | MVTec AD (CC BY-NC-SA 4.0) |
+| Layer               | Technology                                           |
+| ------------------- | ---------------------------------------------------- |
+| Computer Vision     | PyTorch + WideResNet50 (pretrained, frozen)          |
+| Anomaly Detection   | PatchCore — memory bank + greedy coreset subsampling |
+| Agent Orchestration | LangGraph                                            |
+| LLM                 | GPT-4o / Claude Sonnet                               |
+| Vector Memory       | ChromaDB                                             |
+| Backend             | FastAPI + Uvicorn                                    |
+| Frontend            | React + Recharts + Canvas API                        |
+| Deployment          | Docker Compose + Railway                             |
+| Dataset             | MVTec AD (CC BY-NC-SA 4.0)                           |
 
 ---
 
@@ -219,4 +223,4 @@ That last part matters. Most engineers who build industrial AI systems have neve
 
 ---
 
-*VisionGuard AI is under active development. Star the repository to follow progress.*
+_VisionGuard AI is under active development. Star the repository to follow progress._
