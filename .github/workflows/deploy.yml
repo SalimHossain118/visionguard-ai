@@ -55,4 +55,16 @@ jobs:
           git add -A
           git diff --staged --quiet || git commit -m "deploy: prepare for HF Spaces"
           git remote add space https://Salim118:$HF_TOKEN@huggingface.co/spaces/Salim118/visionguard-ai
-          git push --force space main
+
+          # Retry up to 3 times with 5 minute delay between attempts
+          for i in 1 2 3; do
+            echo "Push attempt $i..."
+            git push --force space main && echo "Success!" && break
+            if [ $i -lt 3 ]; then
+              echo "Attempt $i failed. Waiting 5 minutes before retry..."
+              sleep 300
+            else
+              echo "All 3 attempts failed."
+              exit 1
+            fi
+          done
