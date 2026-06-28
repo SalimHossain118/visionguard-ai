@@ -25,7 +25,6 @@ export default function App() {
   const [previewUrl, setPreviewUrl] = useState(null);
   const [preloadedCategory, setPreloadedCategory] = useState(null);
 
-  // Load history from ChromaDB on startup
   useEffect(() => {
     getHistory()
       .then((data) => {
@@ -36,7 +35,6 @@ export default function App() {
       .catch((err) => console.warn("Could not load history:", err));
   }, [dispatch]);
 
-  // Called when user selects a sample image from the modal
   const handleSampleSelect = (file, url, category) => {
     setSelectedFile(file);
     setPreviewUrl(url);

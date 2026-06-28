@@ -25,7 +25,6 @@ export default function InspectionFeed({
   const [previewUrl, setPreviewUrl] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState("metal_nut");
 
-  // When modal selects an image — load file, preview AND switch category
   useEffect(() => {
     if (preloadedFile && preloadedUrl) {
       setSelectedFile(preloadedFile);
@@ -34,7 +33,6 @@ export default function InspectionFeed({
         setSelectedCategory(preloadedCategory);
         dispatch(setCategory(preloadedCategory));
       }
-
       if (onPreloadConsumed) onPreloadConsumed();
     }
   }, [
@@ -139,13 +137,13 @@ export default function InspectionFeed({
           ) : (
             <div>
               <div className="text-4xl mb-2">📁</div>
-              <p className="text-slate-300 text-sm font-medium">
-                Drop your image here or click to upload
+              <p className="text-slate-400 text-sm">
+                Drop image here or click to upload
               </p>
-              <p className="text-slate-500 text-xs mt-2">PNG, JPG supported</p>
-              <div className="mt-4 border-t border-slate-600 pt-4">
-                <p className="text-slate-400 text-xs mb-2">
-                  Don't have an image? Try our test images:
+              <p className="text-slate-600 text-xs mt-2">PNG, JPG supported</p>
+              <div className="mt-4 border-t border-slate-700 pt-4">
+                <p className="text-slate-500 text-xs mb-2">
+                  Don't have an image?
                 </p>
                 <button
                   onClick={(e) => {

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-const BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:8000";
+const BASE_URL = process.env.REACT_APP_API_URL || "";
 
 const CATEGORIES = [
   {
