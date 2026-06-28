@@ -14,6 +14,7 @@ export default function InspectionFeed({
   preloadedUrl,
   preloadedCategory,
   onPreloadConsumed,
+  onOpenSamples,
 }) {
   const dispatch = useDispatch();
   const { currentInspection, isLoading, error } = useSelector(
@@ -33,6 +34,7 @@ export default function InspectionFeed({
         setSelectedCategory(preloadedCategory);
         dispatch(setCategory(preloadedCategory));
       }
+
       if (onPreloadConsumed) onPreloadConsumed();
     }
   }, [
@@ -137,13 +139,24 @@ export default function InspectionFeed({
           ) : (
             <div>
               <div className="text-4xl mb-2">📁</div>
-              <p className="text-slate-400 text-sm">
-                Drop image here or click to upload
+              <p className="text-slate-300 text-sm font-medium">
+                Drop your image here or click to upload
               </p>
-              <p className="text-slate-600 text-xs mt-1">
-                Or use <span className="text-blue-400">Sample Images</span> from
-                the top bar
-              </p>
+              <p className="text-slate-500 text-xs mt-2">PNG, JPG supported</p>
+              <div className="mt-4 border-t border-slate-600 pt-4">
+                <p className="text-slate-400 text-xs mb-2">
+                  Don't have an image? Try our test images:
+                </p>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    if (onOpenSamples) onOpenSamples();
+                  }}
+                  className="px-4 py-2 bg-blue-500/20 border border-blue-500/30 text-blue-400 rounded-lg text-xs font-medium hover:bg-blue-500/30 transition-colors"
+                >
+                  🖼️ Browse Sample Images
+                </button>
+              </div>
             </div>
           )}
           <input

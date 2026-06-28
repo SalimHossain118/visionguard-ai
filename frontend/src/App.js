@@ -37,7 +37,6 @@ export default function App() {
   }, [dispatch]);
 
   // Called when user selects a sample image from the modal
-  // Now receives category as third argument
   const handleSampleSelect = (file, url, category) => {
     setSelectedFile(file);
     setPreviewUrl(url);
@@ -107,6 +106,7 @@ export default function App() {
               setPreviewUrl(null);
               setPreloadedCategory(null);
             }}
+            onOpenSamples={() => setShowSamples(true)}
           />
         )}
         {activeTab === "report" && <ReportPanel />}
