@@ -37,9 +37,8 @@ def decision_router(state: InspectionState) -> InspectionState:
     else:
         decision = "REWORK"  # default safe decision
 
-    llm = ChatGroq(
-        # model="llama-3.1-8b-instant",
-        model="openai/gpt-oss-20b"
+    llm = ChatGroq(  # pyright: ignore[reportCallIssue] — stop_sequences alias is optional (Field default=None); pyright misreads it as required
+        model="openai/gpt-oss-20b",
         temperature=0.1,
         api_key=convert_to_secret_str(os.getenv("GROQ_API_KEY") or "")
     )

@@ -19,7 +19,7 @@ def report_writer(state: InspectionState) -> InspectionState:
     """
 
     # Groq — free tier, use during development
-    llm = ChatGroq(
+    llm = ChatGroq(  # pyright: ignore[reportCallIssue] — stop_sequences alias is optional (Field default=None); pyright misreads it as required
         # model="llama-3.1-8b-instant",
         model="openai/gpt-oss-20b",
         temperature=0.3,

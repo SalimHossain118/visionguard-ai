@@ -33,13 +33,11 @@ def root_cause_analyst(state: InspectionState) -> InspectionState:
         ])
     else:
         history_text = "No similar historical cases found. This may be a new defect pattern."
-
-    llm = ChatGroq(
-        # model="llama-3.1-8b-instant",
-         model="openai/gpt-oss-20b",
-        temperature=0.2,
-        api_key=convert_to_secret_str(os.getenv("GROQ_API_KEY") or "")
-    )
+    llm = ChatGroq(  # pyright: ignore[reportCallIssue] — stop_sequences alias is optional (Field default=None); pyright misreads it as required
+            model="openai/gpt-oss-20b",
+            temperature=0.1,
+            api_key=convert_to_secret_str(os.getenv("GROQ_API_KEY") or "")
+        )
 
     # OpenAI alternative
     # llm = ChatOpenAI(
