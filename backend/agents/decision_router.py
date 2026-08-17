@@ -38,7 +38,8 @@ def decision_router(state: InspectionState) -> InspectionState:
         decision = "REWORK"  # default safe decision
 
     llm = ChatGroq(
-        model="llama-3.1-8b-instant",
+        # model="llama-3.1-8b-instant",
+        model="openai/gpt-oss-20b"
         temperature=0.1,
         api_key=convert_to_secret_str(os.getenv("GROQ_API_KEY") or "")
     )

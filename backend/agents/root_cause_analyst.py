@@ -35,7 +35,8 @@ def root_cause_analyst(state: InspectionState) -> InspectionState:
         history_text = "No similar historical cases found. This may be a new defect pattern."
 
     llm = ChatGroq(
-        model="llama-3.1-8b-instant",
+        # model="llama-3.1-8b-instant",
+         model="openai/gpt-oss-20b",
         temperature=0.2,
         api_key=convert_to_secret_str(os.getenv("GROQ_API_KEY") or "")
     )
